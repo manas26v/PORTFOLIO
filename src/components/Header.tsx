@@ -4,16 +4,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { navLinks, siteConfig } from '@/data/site';
+import { navLinks, siteConfig, socials } from '@/data/site';
 import { asset } from '@/lib/url';
 import logo from '@/assets/logo.png';
+import { StaggeredMenuPanel, StaggeredMenuToggle } from './StaggeredMenu';
 
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Close the mobile menu whenever the route changes.
   const [prevPath, setPrevPath] = useState(pathname);
@@ -66,7 +67,7 @@ export default function Header() {
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-          scrolled || menuOpen ? 'bg-black/70 backdrop-blur-xl' : 'bg-transparent'
+          scrolled && !menuOpen ? 'bg-black/70 backdrop-blur-xl' : 'bg-transparent'
         }`}
       >
         <nav className="container-x flex h-16 items-center justify-between" aria-label="Main">
@@ -101,58 +102,29 @@ export default function Header() {
             </a>
           </div>
 
-          <button
-            ref={toggleRef}
-            type="button"
-            className="-mr-2 flex size-10 items-center justify-center md:hidden"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <span className="relative block h-3 w-5">
-              <span
-                className={`absolute left-0 h-[1.5px] w-5 rounded bg-fg transition-all duration-300 ${menuOpen ? 'top-1/2 rotate-45' : 'top-0'}`}
-              />
-              <span
-                className={`absolute left-0 h-[1.5px] w-5 rounded bg-fg transition-all duration-300 ${menuOpen ? 'top-1/2 -rotate-45' : 'top-full'}`}
-              />
-            </span>
-          </button>
+          <div className="md:hidden">
+            <StaggeredMenuToggle open={menuOpen} onToggle={() => setMenuOpen((v) => !v)} buttonRef={toggleRef} />
+          </div>
         </nav>
       </header>
 
       {/* Sibling of <header>, not a child: the header's backdrop-filter would
           otherwise become the containing block and clip this fixed panel. */}
-      <div
-        id="mobile-menu"
-        ref={menuRef}
-        className={`fixed inset-x-0 bottom-0 top-16 z-40 bg-black transition-all duration-300 ease-smooth md:hidden ${
-          menuOpen ? 'visible opacity-100' : 'invisible opacity-0'
-        }`}
-      >
-        <ul className="container-x flex flex-col pt-4">
-          {navLinks.map((link) => (
-            <li key={link.href} className="border-b border-line">
-              <Link
-                href={link.href}
-                aria-current={isActive(link.href) ? 'page' : undefined}
-                className="block py-4 font-display text-3xl font-semibold tracking-[-0.03em]"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <div className="container-x mt-8 flex gap-3">
+      <StaggeredMenuPanel
+        open={menuOpen}
+        panelRef={menuRef}
+        currentPath={pathname}
+        items={[{ label: 'Home', href: '/' }, ...navLinks.map((l) => ({ label: l.label, href: l.href }))]}
+        socials={[
+          ...socials.map((s) => ({ label: s.name, href: s.url })),
+          { label: 'Email', href: `mailto:${siteConfig.email}` },
+        ]}
+        footer={
           <a href={asset(siteConfig.resume)} target="_blank" rel="noopener noreferrer" className="pill-light">
-            Resume
+            Download résumé
           </a>
-          <a href={`mailto:${siteConfig.email}`} className="pill-dark">
-            Email me
-          </a>
-        </div>
-      </div>
+        }
+      />
     </>
   );
 }
