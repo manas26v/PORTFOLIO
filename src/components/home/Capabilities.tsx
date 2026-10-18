@@ -30,33 +30,38 @@ const items: Item[] = [
 ];
 
 /**
- * Desktop: the section pins while you scroll and the active item advances.
- * Mobile / reduced motion: a simple stacked list, each item with its visual.
+ * Desktop: tall panels scroll by normally on the left (running off the screen
+ * edge) while the list stays sticky on the right. An item becomes active once
+ * its panel's top passes the middle of the viewport.
+ * Mobile: a simple stacked list, each item with its visual.
  */
 export default function Capabilities() {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
-      const el = trackRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const scrollable = el.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-      const progress = Math.min(Math.max(-rect.top / scrollable, 0), 0.999);
-      setActive(Math.floor(progress * items.length));
+      const mid = window.innerHeight / 2;
+      let next = 0;
+      panelRefs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top < mid) next = i;
+      });
+      setActive(next);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
+  // Bring a panel up to where the sticky list sits (26vh from the top).
   const jumpTo = (i: number) => {
-    const el = trackRef.current;
+    const el = panelRefs.current[i];
     if (!el) return;
-    const scrollable = el.offsetHeight - window.innerHeight;
-    const top = el.getBoundingClientRect().top + window.scrollY + (scrollable * (i + 0.5)) / items.length;
+    const top = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.26;
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
@@ -68,51 +73,52 @@ export default function Capabilities() {
         </h2>
       </div>
 
-      {/* Desktop: pinned, scroll-driven */}
-      <div ref={trackRef} className="relative hidden lg:block" style={{ height: `${items.length * 75 + 25}vh` }}>
-        <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center">
-          {/* Visual column bleeds off the left edge; the list stays on the page grid
-              (right padding = the container's side margin). */}
-          <div className="grid w-full grid-cols-[minmax(0,1fr)_340px] items-center gap-20 pr-[max(2.5rem,calc((100%-1232px)/2))]">
-            <BleedContext.Provider value={true}>
-              <div className="relative h-[min(620px,72vh)]">
-                {items.map((item, i) => (
-                  <div
-                    key={item.title}
-                    aria-hidden={active !== i}
-                    className={`absolute inset-0 transition-all duration-700 ease-smooth ${
-                      active === i ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
-                    }`}
-                  >
-                    {item.visual}
-                  </div>
-                ))}
+      {/* Desktop. Right padding equals the container's side margin, so the list
+          lines up with the page grid while the panels bleed off the left edge. */}
+      <div className="mt-16 hidden grid-cols-[minmax(0,1fr)_340px] gap-20 pr-[max(2.5rem,calc((100%-1232px)/2))] md:mt-24 lg:grid">
+        <BleedContext.Provider value={true}>
+          <div className="flex flex-col gap-36">
+            {items.map((item, i) => (
+              <div
+                key={item.title}
+                ref={(el) => {
+                  panelRefs.current[i] = el;
+                }}
+                aria-hidden="true"
+                className="h-[min(880px,82vh)] min-h-[640px]"
+              >
+                {item.visual}
               </div>
-            </BleedContext.Provider>
-            <ol>
-              {items.map((item, i) => (
-                <li key={item.title} className="border-b border-line last:border-0">
+            ))}
+          </div>
+        </BleedContext.Provider>
+
+        <div>
+          <ol className="sticky top-[26vh]">
+            {items.map((item, i) => (
+              <li key={item.title} className="border-t border-pill py-6 first:border-t-0 first:pt-0">
+                <h3>
                   <button
                     type="button"
                     onClick={() => jumpTo(i)}
-                    aria-current={active === i ? 'step' : undefined}
-                    className={`w-full py-6 text-left font-display text-[28px] font-medium tracking-[-0.02em] transition-colors ${
-                      active === i ? 'text-fg' : 'text-[#7a7a7a] hover:text-muted'
+                    aria-expanded={active === i}
+                    className={`text-left font-display text-[26px] font-medium tracking-[-0.01em] transition-colors duration-300 ${
+                      active === i ? 'text-fg' : 'text-[#999] hover:text-[#bbb]'
                     }`}
                   >
                     {item.title}
                   </button>
-                  <div
-                    className={`grid transition-all duration-500 ease-smooth ${
-                      active === i ? 'grid-rows-[1fr] pb-6 opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <p className="overflow-hidden text-[17px] leading-relaxed text-muted">{item.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
+                </h3>
+                <div
+                  className={`grid transition-all duration-500 ease-smooth ${
+                    active === i ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                  }`}
+                >
+                  <p className="overflow-hidden pt-3 text-[17px] leading-[1.6] text-[#999]">{item.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
 

@@ -32,17 +32,93 @@ function SideHeader({ tabs, active }: { tabs: string[]; active: number }) {
   );
 }
 
-/** Canvas on the left, inspector on the right — the frame shared by all four visuals. */
-function Workspace({ canvas, inspector, canvasClass }: { canvas: ReactNode; inspector: ReactNode; canvasClass: string }) {
+type Track = {
+  /** Long bar on the first row (Tailwind classes for border + fill). */
+  lead: { label: string; className: string };
+  /** Back-to-back segments on the second row. */
+  segments: { labels: string[]; className: string };
+};
+
+const ruler = ['0s', '2s', '4s', '6s', '8s', '10s', '12s', '14s'];
+
+/** Editor-style toolbar and timeline shown under the canvas on tall desktop panels. */
+function Timeline({ track }: { track: Track }) {
+  return (
+    <div className="border-t border-panel-line">
+      <div className="flex items-center gap-1 px-5 py-3">
+        {['M5 3l14 9-14 9V3z', 'M4 6h16M4 12h10M4 18h16', 'M12 3v18M3 12h18', 'M4 4h16v16H4z'].map((d, i) => (
+          <span
+            key={d}
+            className={`flex size-9 items-center justify-center rounded-md ${i === 0 ? 'bg-select/90 text-white' : 'text-muted'}`}
+          >
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d={d} />
+            </svg>
+          </span>
+        ))}
+        <span className="ml-auto h-1 w-24 rounded-full bg-surface">
+          <span className="block h-full w-2/5 rounded-full bg-muted" />
+        </span>
+      </div>
+      <div className="flex justify-between border-y border-panel-line px-5 py-2 font-mono text-[11px] text-faint">
+        {ruler.map((r) => (
+          <span key={r}>{r}</span>
+        ))}
+      </div>
+      <div className="space-y-2 px-5 py-5 font-mono text-[11px]">
+        <div
+          className={`flex h-9 w-[86%] items-center rounded-md border-[1.5px] px-3 shadow-[0_0_18px_-6px_currentColor] ${track.lead.className}`}
+        >
+          {track.lead.label}
+        </div>
+        <div className="flex w-[86%] gap-1">
+          {track.segments.labels.map((l) => (
+            <div
+              key={l}
+              className={`flex h-9 flex-1 items-center rounded-md border-[1.5px] px-3 shadow-[0_0_18px_-6px_currentColor] ${track.segments.className}`}
+            >
+              {l}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Canvas + inspector frame shared by all four visuals. In bleed mode (tall
+ * desktop panels) it runs off the left screen edge and adds a timeline.
+ */
+function Workspace({
+  canvas,
+  inspector,
+  canvasClass,
+  track,
+}: {
+  canvas: ReactNode;
+  inspector: ReactNode;
+  canvasClass: string;
+  track: Track;
+}) {
   const bleed = useContext(BleedContext);
   return (
     <Panel
-      className={`grid h-full grid-cols-[1fr_minmax(0,230px)] max-sm:grid-cols-1 ${bleed ? 'rounded-l-none border-l-0' : ''}`}
+      className={`grid h-full ${bleed ? 'grid-cols-[1fr_300px] rounded-l-none border-l-0' : 'grid-cols-[1fr_minmax(0,230px)] max-sm:grid-cols-1'}`}
     >
-      <div className={`relative min-h-[260px] overflow-hidden ${canvasClass}`}>
-        {/* In bleed mode the background spans to the screen edge while the mock
-            itself stays anchored next to the inspector. */}
-        <div className={bleed ? 'absolute inset-y-0 right-0 w-full max-w-[640px]' : 'contents'}>{canvas}</div>
+      <div className="flex min-h-0 flex-col">
+        <div className={`relative min-h-[260px] flex-1 overflow-hidden ${canvasClass}`}>
+          {/* In bleed mode the background spans to the screen edge while the mock
+              itself stays anchored next to the inspector. */}
+          <div className={bleed ? 'absolute inset-y-0 right-0 w-full max-w-[640px]' : 'contents'}>{canvas}</div>
+        </div>
+        {bleed && (
+          <div className="flex justify-end">
+            <div className="w-full max-w-[720px]">
+              <Timeline track={track} />
+            </div>
+          </div>
+        )}
       </div>
       <div className="border-l border-panel-line max-sm:hidden">{inspector}</div>
     </Panel>
@@ -52,9 +128,13 @@ function Workspace({ canvas, inspector, canvasClass }: { canvas: ReactNode; insp
 export function ApiVisual() {
   return (
     <Workspace
+      track={{
+        lead: { label: 'GET /reports/:id', className: 'border-brand-orange bg-brand-orange/15 text-brand-orange' },
+        segments: { labels: ['auth', 'validate', 'query', 'respond'], className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
+      }}
       canvasClass="bg-[radial-gradient(80%_80%_at_30%_30%,#1e3a8a,#020617)]"
       canvas={
-        <div className="absolute inset-6 rounded-xl border border-white/10 bg-black/60 p-5 font-mono text-[13px] leading-relaxed backdrop-blur sm:inset-10">
+        <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 rounded-xl border border-white/10 bg-black/60 p-5 font-mono text-[13px] leading-relaxed backdrop-blur sm:inset-x-10">
           <p>
             <span className="rounded bg-brand-green/20 px-1.5 text-brand-green">GET</span>{' '}
             <span className="text-fg">/api/v1/reports/:id</span>
@@ -106,6 +186,10 @@ export function DataVisual() {
   ];
   return (
     <Workspace
+      track={{
+        lead: { label: 'sync job · every 15 min', className: 'border-block-green bg-block-green/15 text-brand-green' },
+        segments: { labels: ['extract', 'transform', 'load', 'report'], className: 'border-brand-light-blue bg-brand-light-blue/15 text-brand-light-blue' },
+      }}
       canvasClass="bg-[radial-gradient(80%_80%_at_70%_30%,#064e3b,#020617)]"
       canvas={
         <div className="absolute inset-0 flex items-center justify-center gap-6 p-6">
@@ -153,9 +237,13 @@ export function DataVisual() {
 export function SecurityVisual() {
   return (
     <Workspace
+      track={{
+        lead: { label: 'request · tenant=acme', className: 'border-brand-pink bg-block-pink/20 text-brand-pink' },
+        segments: { labels: ['token', 'set role', 'RLS check', 'rows'], className: 'border-brand-purple bg-block-indigo/30 text-[#c4b5fd]' },
+      }}
       canvasClass="bg-[radial-gradient(80%_80%_at_40%_30%,#4c1d95,#020617)]"
       canvas={
-        <div className="absolute inset-6 grid grid-cols-2 gap-3 sm:inset-10">
+        <div className="absolute inset-x-6 top-1/2 grid -translate-y-1/2 grid-cols-2 gap-3 sm:inset-x-10">
           {[
             ['acme', 'bg-brand-pink'],
             ['globex', 'bg-brand-light-blue'],
@@ -210,6 +298,10 @@ export function PerformanceVisual() {
   ];
   return (
     <Workspace
+      track={{
+        lead: { label: 'p95 · 820 ms → 38 ms', className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
+        segments: { labels: ['profile', 'index', 'plan', 'cache'], className: 'border-block-green bg-block-green/15 text-brand-green' },
+      }}
       canvasClass="bg-panel"
       canvas={
         <div className="absolute inset-6 flex flex-col justify-center gap-3 sm:inset-10">
