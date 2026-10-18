@@ -1,24 +1,19 @@
 import localFont from 'next/font/local';
-import { Inter } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 
-// Fonts are self-hosted at build time: no runtime request to Google, no layout shift.
-export const inter = Inter({
+// Body copy. Self-hosted at build time by next/font.
+export const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-manrope',
   display: 'swap',
 });
 
-// Headings only use the condensed cut (font-bold). The other Incognito
-// weights live in src/fonts/ — add them here if a design needs them, since
-// every listed weight is preloaded on every page.
-export const incognito = localFont({
-  variable: '--font-incognito',
+// Display headings. General Sans by Indian Type Foundry (ITF Free Font License).
+export const generalSans = localFont({
+  variable: '--font-general-sans',
   display: 'swap',
-  src: [{ path: '../fonts/incognito_condensed.woff2', weight: '700' }],
-});
-
-export const gitlabMono = localFont({
-  variable: '--font-gitlab-mono',
-  display: 'swap',
-  src: [{ path: '../fonts/gitlab-mono.woff2', weight: '300 600' }],
+  src: [
+    { path: '../fonts/general-sans-500.woff2', weight: '500' },
+    { path: '../fonts/general-sans-600.woff2', weight: '600' },
+  ],
 });

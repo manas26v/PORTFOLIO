@@ -3,28 +3,17 @@ import type { Project } from '@/data/projects';
 
 export default function ProjectLinks({ project, className = '' }: { project: Project; className?: string }) {
   if (!project.github && !project.external) return null;
+  const link = 'relative z-20 flex p-2 text-muted transition-colors hover:text-fg';
   return (
-    <div className={`relative z-20 flex items-center text-soft ${className}`}>
+    <div className={`flex items-center ${className}`}>
       {project.github && (
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${project.title} on GitHub`}
-          className="flex p-2.5 transition-colors hover:text-accent"
-        >
-          <GitHubIcon />
+        <a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} on GitHub`} className={link}>
+          <GitHubIcon size={18} />
         </a>
       )}
       {project.external && (
-        <a
-          href={project.external}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${project.title} live site`}
-          className="flex p-2.5 transition-colors hover:text-accent"
-        >
-          <ExternalIcon />
+        <a href={project.external} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} live site`} className={link}>
+          <ExternalIcon size={18} />
         </a>
       )}
     </div>

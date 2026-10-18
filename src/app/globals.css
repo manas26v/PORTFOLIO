@@ -2,46 +2,60 @@
 @plugin '@tailwindcss/typography';
 
 /* ============================================
-   Design tokens — the original zinc-900 palette with the blue accent.
-   Use as Tailwind utilities: bg-bg, bg-surface, text-fg, text-accent, border-line…
+   Design tokens — pure-black canvas, near-white type, hairline borders,
+   pill buttons and a single bright blue, with neon accents for visuals.
+   Use as utilities: bg-bg, bg-panel, text-fg, text-muted, border-line…
    ============================================ */
 @theme {
-  --color-bg: #18181b;
-  --color-surface: #27272a;
-  --color-line: #3f3f46;
-  --color-muted: #a1a1aa;
-  --color-soft: #d4d4d8;
-  --color-fg: #f4f4f5;
-  --color-accent: #4d9fff;
-  --color-accent-tint: rgb(77 159 255 / 0.1);
-  --color-warm: #ff8c42;
+  --color-bg: #000;
+  --color-fg: oklch(98.5% 0 0);
+  --color-muted: oklch(68.3% 0 0);
+  --color-faint: #666;
+  --color-line: oklch(24.33% 0.004 264.49);
+  --color-panel: #0f0f10;
+  --color-panel-line: #1f1f21;
+  --color-surface: #1b1b1e;
+  --color-pill: #1d1d1d;
+  --color-pill-hover: #2a2a2a;
+  --color-accent: oklch(66.9% 0.184 248.81);
+  --color-select: #0c8ce9;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: var(--font-incognito), var(--font-inter), ui-serif, Georgia, serif;
-  --font-mono: var(--font-gitlab-mono), ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --color-brand-light-blue: oklch(65.79% 0.118 218.57);
+  --color-brand-dark-blue: oklch(53.51% 0.255 274.53);
+  --color-brand-green: oklch(65.95% 0.168 152.32);
+  --color-brand-purple: oklch(59.81% 0.254 298.01);
+  --color-brand-orange: oklch(68.43% 0.21 39.11);
+  --color-brand-pink: oklch(67.59% 0.273 344.75);
 
-  --ease-smooth: cubic-bezier(0.645, 0.045, 0.355, 1);
-  --shadow-panel: 0 10px 30px -15px rgb(0 0 0 / 0.7);
+  --color-block-pink: #a80075;
+  --color-block-indigo: #2e2c9e;
+  --color-block-blue: #005e9f;
+  --color-block-green: #00b252;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-general-sans), var(--font-manrope), sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 5rem;
     color-scheme: dark;
   }
   body {
-    @apply bg-bg text-muted font-sans antialiased;
+    @apply bg-bg font-sans text-fg antialiased;
     overflow-x: clip;
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.5;
   }
   ::selection {
-    background: rgb(77 159 255 / 0.3);
-    color: var(--color-fg);
+    background: oklch(66.9% 0.184 248.81 / 0.35);
   }
   :focus-visible {
-    outline: 2px dashed var(--color-accent);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -58,85 +72,78 @@
   }
 }
 
+/* Pill buttons. Registered as utilities so they can be composed with @apply. */
+@utility pill {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-1.5 text-[15px] font-medium leading-6 transition-colors duration-200;
+}
+@utility pill-light {
+  @apply pill bg-fg text-black hover:bg-white/80;
+}
+@utility pill-dark {
+  @apply pill bg-pill text-fg hover:bg-pill-hover;
+}
+
 @layer components {
-  /* Outlined accent button used for CTAs. */
-  .btn {
-    @apply inline-flex items-center gap-2 rounded border border-accent px-7 py-4 font-mono text-sm leading-none text-accent transition-all duration-300 ease-smooth;
-  }
-  .btn:hover,
-  .btn:focus-visible {
-    @apply bg-accent-tint -translate-y-0.5;
-    box-shadow: 4px 4px 0 0 var(--color-accent);
-  }
-  .btn-sm {
-    @apply px-4 py-2.5 text-xs;
+  /* Page container: a 1232px content column with fluid gutters. */
+  .container-x {
+    @apply mx-auto w-full px-6 sm:px-10;
+    max-width: calc(1232px + 5rem);
   }
 
-  /* Accent link with a growing underline. */
-  .inline-link {
-    @apply relative text-accent;
+  /* Display type */
+  .display-xl {
+    @apply font-display text-[clamp(48px,8.5vw,100px)] font-semibold leading-[0.95] tracking-[-0.045em] text-balance;
   }
-  .inline-link::after {
-    content: '';
-    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-accent opacity-50 transition-all duration-300 ease-smooth;
+  .display-lg {
+    @apply font-display text-[clamp(40px,5.5vw,64px)] font-semibold leading-[1.02] tracking-[-0.04em] text-balance;
   }
-  .inline-link:hover::after,
-  .inline-link:focus-visible::after {
-    @apply w-full;
+  .display-md {
+    @apply font-display text-[clamp(26px,3vw,36px)] font-semibold leading-[1.1] tracking-[-0.03em];
   }
 
-  /* "01. About Me ———" section heading. */
-  .numbered-heading {
-    @apply relative mb-10 flex w-full items-center font-mono text-2xl font-semibold text-fg sm:whitespace-nowrap sm:text-[32px];
-  }
-  .numbered-heading::after {
-    content: '';
-    @apply relative top-0.5 ml-5 block h-px min-w-8 flex-1 bg-line sm:w-72 sm:flex-none;
-  }
-  .numbered-heading > .num {
-    @apply mr-2.5 font-mono text-base font-normal text-accent sm:text-xl;
+  /* Rounded frame whose children are separated by hairlines. */
+  .frame {
+    @apply overflow-hidden rounded-2xl border border-line;
   }
 
-  /* ▹ bullet list */
-  .arrow-list > li {
-    @apply relative pl-7;
-  }
-  .arrow-list > li::before {
-    content: '▹';
-    @apply absolute left-0 text-accent;
+  .eyebrow {
+    @apply text-[13px] font-medium uppercase tracking-[0.06em] text-muted;
   }
 
   /* Blog prose tuned to the palette. */
   .prose-portfolio {
     @apply prose prose-lg prose-invert max-w-none;
-    --tw-prose-body: var(--color-soft);
+    --tw-prose-body: oklch(80% 0 0);
     --tw-prose-headings: var(--color-fg);
-    --tw-prose-links: var(--color-accent);
+    --tw-prose-links: var(--color-fg);
     --tw-prose-bold: var(--color-fg);
-    --tw-prose-bullets: var(--color-accent);
-    --tw-prose-counters: var(--color-accent);
-    --tw-prose-quotes: var(--color-soft);
-    --tw-prose-quote-borders: var(--color-accent);
+    --tw-prose-bullets: var(--color-faint);
+    --tw-prose-counters: var(--color-muted);
+    --tw-prose-quotes: var(--color-fg);
+    --tw-prose-quote-borders: var(--color-line);
     --tw-prose-code: var(--color-fg);
     --tw-prose-hr: var(--color-line);
     --tw-prose-th-borders: var(--color-line);
     --tw-prose-td-borders: var(--color-line);
-    --tw-prose-pre-bg: var(--color-surface);
+    --tw-prose-pre-bg: var(--color-panel);
+  }
+  .prose-portfolio :where(h2, h3, h4) {
+    @apply font-display font-semibold tracking-[-0.02em];
   }
   .prose-portfolio :where(h2, h3, h4) a {
     @apply text-inherit no-underline;
   }
-  .prose-portfolio :where(h2, h3) {
-    @apply font-mono;
+  .prose-portfolio :where(p, li) a {
+    @apply underline decoration-line underline-offset-4 transition-colors hover:decoration-fg;
   }
   .prose-portfolio :not(pre) > code {
-    @apply rounded bg-surface px-1.5 py-0.5 font-mono text-[0.85em] font-normal before:content-none after:content-none;
+    @apply rounded-md bg-pill px-1.5 py-0.5 font-mono text-[0.85em] font-normal before:content-none after:content-none;
   }
   .prose-portfolio pre {
-    @apply border border-line font-mono text-sm leading-relaxed;
+    @apply rounded-xl border border-panel-line font-mono text-sm leading-relaxed;
   }
-  .prose-portfolio figure[data-rehype-pretty-code-figure] {
-    @apply my-6;
+  .prose-portfolio [data-rehype-pretty-code-title] {
+    @apply mb-2 font-mono text-xs text-muted;
   }
 }
 
@@ -146,103 +153,58 @@
    ============================================ */
 .js .reveal {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(16px);
   transition:
-    opacity 0.6s var(--ease-smooth),
-    transform 0.6s var(--ease-smooth);
+    opacity 0.8s var(--ease-smooth),
+    transform 0.8s var(--ease-smooth);
 }
 .js .reveal.visible {
   opacity: 1;
   transform: none;
 }
 
-/* Above-the-fold entrance (hero). Pure CSS so the largest text on the page
-   never waits for JavaScript; it starts as the splash loader finishes. */
+/* Above-the-fold entrance (hero): pure CSS so the largest text never waits for JS. */
 .fade-up {
-  animation: fade-up 0.6s var(--ease-smooth) both;
-  animation-delay: calc(var(--d, 0) * 90ms + 2.6s);
-}
-.loader-seen .fade-up {
-  animation-delay: calc(var(--d, 0) * 90ms + 0.1s);
+  animation: fade-up 0.9s var(--ease-smooth) both;
+  animation-delay: calc(var(--d, 0) * 80ms);
 }
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
-/* ============================================
-   First-visit loader (logo wipe). Shown once per session; the inline script in
-   the root layout adds .loader-seen to skip it. The fade-out is pure CSS so the
-   page can never get stuck behind it.
-   ============================================ */
-.loader {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg);
-  animation: loader-out 0.5s ease 2.8s forwards;
+/* Endless showcase rows. The tile list is rendered twice; sliding by half loops seamlessly. */
+.marquee {
+  animation: marquee var(--marquee-duration, 70s) linear infinite;
 }
-.loader-seen .loader {
-  display: none;
+.marquee-reverse {
+  animation-direction: reverse;
 }
-.loader__path {
-  fill: #3b9eff;
-  filter: drop-shadow(0 0 8px rgb(59 158 255 / 0.45));
+.marquee-pause:hover .marquee {
+  animation-play-state: paused;
 }
-.loader__sweep {
-  animation: loader-wipe 2.8s cubic-bezier(0.6, 0.05, 0.3, 1) infinite;
-}
-@keyframes loader-wipe {
-  0% { transform: translateX(-900px); }
-  55% { transform: translateX(0); }
-  80% { transform: translateX(0); }
-  100% { transform: translateX(900px); }
-}
-@keyframes loader-out {
-  to { opacity: 0; visibility: hidden; }
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-/* ============================================
-   Hero isometric graphic
-   ============================================ */
-.iso-graphic {
-  opacity: 0;
-  animation: iso-in 1s ease 0.6s forwards;
-}
-.loader-seen .iso-graphic {
-  animation-delay: 0.1s;
-}
-/* Each edge is mostly drawn (192) with a 64-long gap travelling through it;
-   per-line negative delays keep edges out of phase. */
-.iso-graphic .il {
-  stroke-dasharray: 192 64;
-  animation: iso-dash 6s linear infinite;
-}
-.iso-graphic .in {
-  animation: iso-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-@keyframes iso-in {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes iso-dash {
-  to { stroke-dashoffset: 256; }
-}
-@keyframes iso-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+/* Blue halo behind the closing logo; fades out on every side so it never shows an edge. */
+.glow-logo-halo {
+  background: radial-gradient(38% 42% at 50% 62%, oklch(42% 0.22 262 / 0.75), oklch(30% 0.18 262 / 0.25) 55%, transparent 100%);
 }
 
-/* Mobile menu open: blur the page behind the drawer. */
+/* Soft blue light rising from below (404). */
+.glow-bottom {
+  background: radial-gradient(45% 55% at 50% 100%, oklch(42% 0.22 262 / 0.6), transparent 75%);
+}
+.glow-logo {
+  filter: drop-shadow(0 0 18px oklch(72% 0.18 235 / 0.9)) drop-shadow(0 0 70px oklch(55% 0.25 262 / 0.85));
+}
+
+/* Mobile menu open: lock the page. */
 body.menu-open {
   overflow: hidden;
-}
-body.menu-open #content,
-body.menu-open footer {
-  filter: blur(5px) brightness(0.7);
-  pointer-events: none;
-  user-select: none;
-  transition: filter 0.25s var(--ease-smooth);
 }

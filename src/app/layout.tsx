@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import SideRails from '@/components/SideRails';
-import Loader from '@/components/Loader';
 import RevealObserver from '@/components/RevealObserver';
 import JsonLd from '@/components/JsonLd';
 import { siteConfig, socials } from '@/data/site';
 import { absoluteUrl } from '@/lib/url';
-import { gitlabMono, incognito, inter } from './fonts';
+import { generalSans, manrope } from './fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -26,14 +24,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#18181b',
+  themeColor: '#000000',
   colorScheme: 'dark',
 };
 
-// Runs before first paint: enables reveal animations only when JS is on, and
-// skips the splash loader after the first page view of a session (or when the
-// visitor prefers reduced motion).
-const bootScript = `(function(){var d=document.documentElement;d.classList.add('js');try{if(sessionStorage.getItem('loader-seen')||matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('loader-seen')}else{sessionStorage.setItem('loader-seen','1')}}catch(e){d.classList.add('loader-seen')}})();`;
+// Runs before first paint: scroll-reveal animations only apply when JS is on,
+// so content is never hidden for crawlers or no-JS visitors.
+const bootScript = `document.documentElement.classList.add('js')`;
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -50,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${incognito.variable} ${gitlabMono.variable}`}
+      className={`${manrope.variable} ${generalSans.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -60,14 +57,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#content"
-          className="fixed left-4 top-0 z-[200] -translate-y-full rounded-b bg-surface px-4 py-2 font-mono text-sm text-accent transition-transform focus:translate-y-0"
+          className="pill-light fixed left-4 top-3 z-[200] -translate-y-20 transition-transform focus:translate-y-0"
         >
           Skip to content
         </a>
-        <Loader />
         <Header />
-        <SideRails />
-        <main id="content" className="mx-auto w-full max-w-5xl px-6 sm:px-12 md:px-20 lg:px-24 xl:px-0">
+        <main id="content">
           {children}
         </main>
         <Footer />

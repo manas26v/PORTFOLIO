@@ -20,14 +20,16 @@ export default function BlogPage() {
         title="Writing."
         intro={
           <>
-            Notes on backend engineering, databases and the things I learn along the way.{' '}
-            <a href={`${siteConfig.basePath}/feed.xml`} className="inline-link inline-flex items-center gap-1.5">
-              <RssIcon size={16} /> RSS
-            </a>
+            Notes on backend engineering, databases and the things I learn along the way.
+            <span className="mt-6 flex">
+              <a href={`${siteConfig.basePath}/feed.xml`} className="pill-dark">
+                <RssIcon size={14} /> Subscribe via RSS
+              </a>
+            </span>
           </>
         }
       />
-      <section aria-label="All posts" className="pb-24 pt-10">
+      <section aria-label="All posts" className="container-x pb-24">
         <PostList posts={posts} />
       </section>
     </>

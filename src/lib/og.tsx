@@ -20,23 +20,22 @@ export function renderOgImage({ eyebrow, title, footer }: { eyebrow: string; tit
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: 72,
-          background: 'linear-gradient(135deg, #18181b 0%, #1f1f23 60%, #1b2433 100%)',
-          color: '#f4f4f5',
+          background: 'radial-gradient(60% 70% at 50% 120%, #1d3fb8 0%, #000 70%)',
+          color: '#fafafa',
           fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse only renders plain <img> */}
           <img src={logo} width={96} height={96} alt="" />
-          <div style={{ display: 'flex', fontSize: 26, color: '#4d9fff', letterSpacing: 2 }}>{eyebrow.toUpperCase()}</div>
+          <div style={{ display: 'flex', fontSize: 22, color: '#000', background: '#fafafa', borderRadius: 999, padding: '8px 22px' }}>{eyebrow}</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontSize: title.length > 48 ? 60 : 76, fontWeight: 700, lineHeight: 1.1, maxWidth: 1000 }}>
+          <div style={{ fontSize: title.length > 48 ? 64 : 82, fontWeight: 700, lineHeight: 1, letterSpacing: -3, maxWidth: 1000 }}>
             {title}
           </div>
-          <div style={{ marginTop: 24, width: 120, height: 6, background: '#4d9fff', borderRadius: 3 }} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 26, color: '#a1a1aa' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 26, color: '#a3a3a3' }}>
           <span>{siteConfig.name}</span>
           <span>{footer ?? siteConfig.url.replace(/^https?:\/\//, '')}</span>
         </div>

@@ -4,12 +4,13 @@ export const metadata = { title: 'Page not found', robots: { index: false } };
 
 export default function NotFound() {
   return (
-    <section className="flex min-h-dvh flex-col items-center justify-center text-center">
-      <p className="font-mono text-[clamp(100px,25vw,200px)] font-semibold leading-none text-accent">404</p>
-      <h1 className="mt-4 font-mono text-xl text-fg sm:text-2xl">Page Not Found</h1>
-      <p className="mt-3 max-w-md text-soft">The page you&apos;re looking for doesn&apos;t exist or has moved.</p>
-      <Link href="/" className="btn mt-10">
-        Go Home
+    <section className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 text-center">
+      <div aria-hidden="true" className="glow-bottom pointer-events-none absolute inset-0" />
+      <p className="relative font-display text-[clamp(120px,28vw,260px)] font-semibold leading-none tracking-[-0.06em]">404</p>
+      <h1 className="relative mt-2 display-md">This page doesn&apos;t exist.</h1>
+      <p className="relative mt-3 max-w-md text-lg text-muted">It may have moved, or the link might be wrong.</p>
+      <Link href="/" className="pill-light relative mt-8">
+        Back home
       </Link>
     </section>
   );

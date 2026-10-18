@@ -2,7 +2,7 @@
 
 # 🚀 Manas Ranjan Barik — Developer Portfolio
 
-A fast, multi-page developer portfolio built with **Next.js (App Router) + TypeScript + Tailwind CSS**, statically exported to GitHub Pages. Dark zinc theme, blue accent, and an animated isometric hero.
+A fast, multi-page developer portfolio built with **Next.js (App Router) + TypeScript + Tailwind CSS**, statically exported to GitHub Pages. Pure-black canvas, General Sans display type, pill buttons, an auto-scrolling showcase mosaic and a scroll-pinned feature section.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-00C853?style=for-the-badge&logo=github&logoColor=white)](https://manas26v.github.io/PORTFOLIO/)
 [![Deploy](https://github.com/manas26v/PORTFOLIO/actions/workflows/deploy.yml/badge.svg)](https://github.com/manas26v/PORTFOLIO/actions/workflows/deploy.yml)
@@ -29,7 +29,7 @@ A fast, multi-page developer portfolio built with **Next.js (App Router) + TypeS
 - 🔎 **SEO built in** — per-page metadata & canonical URLs, Open Graph/Twitter cards, generated OG images, `sitemap.xml`, `robots.txt`, RSS feed, JSON-LD (Person, BlogPosting, SoftwareSourceCode)
 - ✍️ **Markdown blog** — frontmatter, reading time, drafts, and build-time syntax highlighting (Shiki)
 - ♿ **Accessible** — skip link, keyboard-navigable tabs and menu (focus trap, Escape), visible focus, `prefers-reduced-motion` respected
-- 🎨 **Animations** — first-visit logo loader, animated isometric hero, scroll reveals, hover micro-interactions
+- 🎨 **Animations** — CSS-only hero entrance, endless showcase marquee, scroll-pinned capabilities section, scroll reveals, glowing sign-off — all respecting `prefers-reduced-motion`
 - 🚀 **Auto-deploy** — every push to `main` is linted, type-checked, built and published by GitHub Actions
 
 ---
@@ -42,7 +42,7 @@ A fast, multi-page developer portfolio built with **Next.js (App Router) + TypeS
 | **Language** | TypeScript (strict) |
 | **Styling** | Tailwind CSS v4 (design tokens in `src/app/globals.css`), `@tailwindcss/typography` |
 | **Content** | Typed data modules + Markdown (unified / remark / rehype / Shiki) |
-| **Fonts** | `next/font` — Inter, Incognito, GitLab Mono (self-hosted) |
+| **Fonts** | `next/font` — General Sans (display, ITF Free Font License) + Manrope (body, OFL), self-hosted |
 | **Hosting** | GitHub Pages via GitHub Actions |
 
 ---

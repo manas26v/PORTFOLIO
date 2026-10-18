@@ -18,8 +18,8 @@ export default function ProjectFilter({ items }: { items: { tech: string[]; node
   const visible = selected ? items.filter((i) => i.tech.includes(selected)) : items;
 
   const chip = (active: boolean) =>
-    `rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors ${
-      active ? 'border-accent bg-accent-tint text-accent' : 'border-line text-muted hover:border-accent hover:text-accent'
+    `rounded-full px-3.5 py-1.5 text-sm transition-colors ${
+      active ? 'bg-fg text-black' : 'bg-pill text-muted hover:bg-pill-hover hover:text-fg'
     }`;
 
   return (
@@ -43,7 +43,7 @@ export default function ProjectFilter({ items }: { items: { tech: string[]; node
       <p className="sr-only" aria-live="polite">
         {visible.length} project{visible.length === 1 ? '' : 's'} shown
       </p>
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((i) => (
           <li key={i.key} className="contents">
             {i.node}

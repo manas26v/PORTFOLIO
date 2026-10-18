@@ -42,7 +42,7 @@ export default async function PostPage({ params }: Props) {
   const older = all[i + 1];
 
   return (
-    <article className="mx-auto max-w-3xl pb-16 pt-36 md:pt-44">
+    <article className="container-x max-w-[calc(720px+5rem)] pb-16 pt-32 md:pt-40">
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -58,12 +58,12 @@ export default async function PostPage({ params }: Props) {
         }}
       />
 
-      <Link href="/blog/" className="reveal inline-flex items-center gap-2 font-mono text-sm text-accent hover:underline">
+      <Link href="/blog/" className="fade-up inline-flex items-center gap-2 text-[15px] text-muted hover:text-fg">
         <ArrowLeftIcon size={16} /> All posts
       </Link>
 
-      <header className="mb-12 mt-8 border-b border-line pb-10">
-        <div className="reveal flex flex-wrap gap-x-3 gap-y-1 font-mono text-[13px] text-muted">
+      <header className="mb-12 mt-10 border-b border-line pb-10">
+        <div className="fade-up flex flex-wrap gap-x-3 gap-y-1 text-[15px] text-muted">
           <time dateTime={post.date}>{formatDate(post.date)}</time>
           <span aria-hidden="true">·</span>
           <span>{post.readingTime}</span>
@@ -76,14 +76,14 @@ export default async function PostPage({ params }: Props) {
             </>
           )}
         </div>
-        <h1 className="reveal mt-4 font-display text-[clamp(34px,6vw,56px)] font-bold leading-[1.08] text-fg">
+        <h1 className="fade-up display-lg mt-5">
           {post.title}
         </h1>
-        <p className="reveal mt-5 text-xl leading-relaxed text-soft">{post.description}</p>
+        <p className="fade-up mt-6 text-xl font-medium leading-snug text-muted">{post.description}</p>
         {post.tags.length > 0 && (
-          <ul className="reveal mt-6 flex flex-wrap gap-2" aria-label="Tags">
+          <ul className="fade-up mt-6 flex flex-wrap gap-1.5" aria-label="Tags">
             {post.tags.map((t) => (
-              <li key={t} className="rounded-full bg-accent-tint px-3 py-1 font-mono text-xs text-accent">
+              <li key={t} className="rounded-full bg-pill px-3 py-1 text-[13px] text-muted">
                 {t}
               </li>
             ))}
@@ -96,17 +96,17 @@ export default async function PostPage({ params }: Props) {
       {(newer || older) && (
         <nav aria-label="More posts" className="mt-20 grid gap-4 border-t border-line pt-10 sm:grid-cols-2">
           {older ? (
-            <Link href={`/blog/${older.slug}/`} className="group rounded border border-line p-5 transition-colors hover:border-accent">
-              <span className="font-mono text-xs text-muted">← Older</span>
-              <span className="mt-1 block font-mono text-fg group-hover:text-accent">{older.title}</span>
+            <Link href={`/blog/${older.slug}/`} className="group rounded-2xl border border-line p-6 transition-colors hover:bg-panel">
+              <span className="text-[13px] text-muted">← Older</span>
+              <span className="mt-1 block text-lg font-medium">{older.title}</span>
             </Link>
           ) : (
             <span />
           )}
           {newer && (
-            <Link href={`/blog/${newer.slug}/`} className="group rounded border border-line p-5 text-right transition-colors hover:border-accent">
-              <span className="font-mono text-xs text-muted">Newer →</span>
-              <span className="mt-1 block font-mono text-fg group-hover:text-accent">{newer.title}</span>
+            <Link href={`/blog/${newer.slug}/`} className="group rounded-2xl border border-line p-6 text-right transition-colors hover:bg-panel">
+              <span className="text-[13px] text-muted">Newer →</span>
+              <span className="mt-1 block text-lg font-medium">{newer.title}</span>
             </Link>
           )}
         </nav>

@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import Hero from '@/components/home/Hero';
-import AboutSummary from '@/components/home/AboutSummary';
-import ExperienceTabs from '@/components/home/ExperienceTabs';
-import FeaturedProject from '@/components/projects/FeaturedProject';
+import Showcase from '@/components/home/Showcase';
+import TechStrip from '@/components/home/TechStrip';
+import Capabilities from '@/components/home/Capabilities';
+import Bento from '@/components/home/Bento';
+import WorkGrid from '@/components/projects/WorkGrid';
 import PostList from '@/components/blog/PostList';
-import ContactCta from '@/components/ContactCta';
+import ClosingCta from '@/components/ClosingCta';
 import { Section } from '@/components/Section';
-import { jobs } from '@/data/experience';
 import { featuredProjects } from '@/data/projects';
 import { getAllPosts } from '@/lib/blog';
 import { pageMetadata } from '@/lib/metadata';
@@ -19,37 +20,39 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <AboutSummary />
+      <Showcase />
+      <TechStrip />
+      <Capabilities />
 
-      <Section id="experience" num="02" title="Where I've Worked">
-        <ExperienceTabs jobs={jobs} />
-      </Section>
-
-      <Section id="work" num="03" title="Some Things I've Built">
-        <ul className="space-y-16 md:space-y-28">
-          {featuredProjects.map((p, i) => (
-            <FeaturedProject key={p.slug} project={p} reversed={i % 2 === 1} />
-          ))}
-        </ul>
-        <p className="reveal mt-16 text-center">
-          <Link href="/projects/" className="btn">
-            View all projects
+      <Section
+        id="work"
+        title="Selected work, built end to end."
+        aside={
+          <Link href="/projects/" className="pill-dark">
+            All projects
           </Link>
-        </p>
+        }
+      >
+        <WorkGrid projects={featuredProjects} />
       </Section>
+
+      <Bento />
 
       {posts.length > 0 && (
-        <Section id="writing" num="04" title="Latest Writing">
-          <PostList posts={posts} />
-          <p className="reveal mt-10">
-            <Link href="/blog/" className="inline-link font-mono text-sm">
-              Read all posts →
+        <Section
+          id="writing"
+          title="Notes from the build"
+          aside={
+            <Link href="/blog/" className="pill-dark">
+              All posts
             </Link>
-          </p>
+          }
+        >
+          <PostList posts={posts} />
         </Section>
       )}
 
-      <ContactCta num={posts.length > 0 ? '05' : '04'} />
+      <ClosingCta />
     </>
   );
 }

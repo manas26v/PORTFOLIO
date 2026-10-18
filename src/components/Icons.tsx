@@ -86,6 +86,13 @@ export const ArrowRightIcon = (p: IconProps) => (
   </Icon>
 );
 
+export const ArrowUpRightIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </Icon>
+);
+
 export const ArrowLeftIcon = (p: IconProps) => (
   <Icon {...p}>
     <line x1="19" y1="12" x2="5" y2="12" />

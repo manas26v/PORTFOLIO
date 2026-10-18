@@ -1,47 +1,61 @@
 import type { ReactNode } from 'react';
 
-/** Standard page section with the "01. Title ——" numbered heading. */
+/** Inner-page title block: big left-aligned display heading. */
+export function PageHeader({ eyebrow, title, intro }: { eyebrow?: string; title: string; intro?: ReactNode }) {
+  const d = (n: number) => ({ '--d': n }) as React.CSSProperties;
+  return (
+    <header className="container-x pb-14 pt-36 md:pb-20 md:pt-44">
+      {eyebrow && (
+        <p style={d(0)} className="fade-up eyebrow mb-5">
+          {eyebrow}
+        </p>
+      )}
+      <h1 style={d(1)} className="fade-up display-xl max-w-[14ch]">
+        {title}
+      </h1>
+      {intro && (
+        <div style={d(2)} className="fade-up mt-7 max-w-2xl text-lg font-medium leading-snug text-muted sm:text-[22px]">
+          {intro}
+        </div>
+      )}
+    </header>
+  );
+}
+
+/** Section with a large display heading, as used across the site. */
 export function Section({
   id,
-  num,
   title,
   children,
+  aside,
   className = '',
 }: {
-  id?: string;
-  num?: string;
+  id: string;
   title: string;
   children: ReactNode;
+  aside?: ReactNode;
   className?: string;
 }) {
-  const headingId = id ? `${id}-heading` : undefined;
   return (
-    <section id={id} aria-labelledby={headingId} className={`py-20 md:py-28 ${className}`}>
-      <h2 id={headingId} className="numbered-heading reveal">
-        {num && <span className="num">{num}.</span>}
-        {title}
-      </h2>
+    <section id={id} aria-labelledby={`${id}-heading`} className={`container-x py-20 md:py-28 ${className}`}>
+      <div className="mb-12 flex flex-wrap items-end justify-between gap-6 md:mb-14">
+        <h2 id={`${id}-heading`} className="display-lg reveal max-w-[14ch]">
+          {title}
+        </h2>
+        {aside && <div className="reveal">{aside}</div>}
+      </div>
       {children}
     </section>
   );
 }
 
-/** Page title block for inner pages. */
-export function PageHeader({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: ReactNode }) {
-  return (
-    <header className="pb-6 pt-36 md:pt-44">
-      <p className="reveal mb-4 font-mono text-base text-accent">{eyebrow}</p>
-      <h1 className="reveal font-display text-[clamp(40px,7vw,72px)] font-bold leading-[1.05] text-fg">{title}</h1>
-      {intro && <div className="reveal mt-6 max-w-2xl text-lg leading-relaxed">{intro}</div>}
-    </header>
-  );
-}
-
 export function TechList({ items, className = '' }: { items: string[]; className?: string }) {
   return (
-    <ul className={`flex flex-wrap gap-x-5 gap-y-1 font-mono text-[13px] text-soft ${className}`} aria-label="Technologies">
+    <ul className={`flex flex-wrap gap-1.5 ${className}`} aria-label="Technologies">
       {items.map((t) => (
-        <li key={t}>{t}</li>
+        <li key={t} className="rounded-full bg-pill px-2.5 py-1 text-[13px] text-muted">
+          {t}
+        </li>
       ))}
     </ul>
   );

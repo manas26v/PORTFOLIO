@@ -1,7 +1,7 @@
-import AboutPhoto from '@/components/AboutPhoto';
-import ContactCta from '@/components/ContactCta';
-import { DownloadIcon } from '@/components/Icons';
-import { PageHeader, Section } from '@/components/Section';
+import Image from 'next/image';
+import ClosingCta from '@/components/ClosingCta';
+import { PageHeader, Section, TechList } from '@/components/Section';
+import photo from '@/assets/about-me.jpg';
 import { jobs, skills } from '@/data/experience';
 import { siteConfig } from '@/data/site';
 import { pageMetadata } from '@/lib/metadata';
@@ -16,15 +16,30 @@ export const metadata = pageMetadata({
 export default function AboutPage() {
   return (
     <>
-      <PageHeader eyebrow="About" title="Building reliable systems behind great products." />
+      <PageHeader
+        eyebrow="About"
+        title="Clean code, real business value."
+        intro="Software developer building scalable web applications, APIs and backend systems."
+      />
 
-      <Section id="bio" num="01" title="Who I Am" className="!pt-10">
-        <div className="grid gap-12 md:grid-cols-[3fr_2fr]">
-          <div className="reveal space-y-4 text-lg leading-relaxed">
+      <div className="container-x">
+        <div className="frame reveal grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          <div className="relative min-h-[360px] border-line lg:border-r">
+            <Image
+              src={photo}
+              alt={`Portrait of ${siteConfig.name}`}
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              placeholder="blur"
+              priority
+              className="object-cover"
+            />
+          </div>
+          <div className="space-y-5 border-t border-line p-6 text-[17px] leading-relaxed text-muted sm:p-10 lg:border-t-0">
             <p>
-              I&apos;m a Software Developer with experience building scalable web applications, APIs, and backend
-              systems. My primary focus is on designing reliable, high-performance solutions using Node.js, Express.js,
-              TypeScript, PostgreSQL, and modern JavaScript technologies.
+              <span className="text-fg">I&apos;m a Software Developer</span> with experience building scalable web
+              applications, APIs, and backend systems. My primary focus is on designing reliable, high-performance
+              solutions using Node.js, Express.js, TypeScript, PostgreSQL, and modern JavaScript technologies.
             </p>
             <p>
               Over the past few years, I&apos;ve worked on developing REST APIs, optimizing database operations,
@@ -33,55 +48,68 @@ export default function AboutPage() {
             </p>
             <p>
               Currently, I&apos;m building scalable applications at{' '}
-              <a href={siteConfig.employer.url} target="_blank" rel="noopener noreferrer" className="inline-link">
+              <a
+                href={siteConfig.employer.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-fg underline decoration-line underline-offset-4 hover:decoration-fg"
+              >
                 {siteConfig.employer.name}
               </a>
               , where I contribute to backend architecture, system integrations, and performance-focused development.
               I&apos;m passionate about clean code, system design, and continuously improving my engineering skills to
               build products that deliver real business value.
             </p>
-            <p className="pt-4">
-              <a href={asset(siteConfig.resume)} className="btn" download target="_blank" rel="noopener noreferrer">
-                <DownloadIcon size={16} /> Download résumé
+            <div className="flex flex-wrap gap-3 pt-3">
+              <a href={asset(siteConfig.resume)} target="_blank" rel="noopener noreferrer" className="pill-light">
+                Download résumé
               </a>
-            </p>
+              <a href={`mailto:${siteConfig.email}`} className="pill-dark">
+                Email me
+              </a>
+            </div>
           </div>
-          <AboutPhoto className="reveal" />
         </div>
-      </Section>
+      </div>
 
-      <Section id="skills" num="02" title="Toolbox">
-        <p className="reveal mb-6 text-lg">Here are a few technologies I&apos;ve been working with recently:</p>
-        <ul className="reveal flex flex-wrap gap-3">
+      <Section id="toolbox" title="Toolbox">
+        <p className="reveal -mt-6 mb-8 text-lg text-muted">Technologies I&apos;ve been working with recently.</p>
+        {/* Each cell draws its own 1px ring, so a partly filled last row stays black instead of grey. */}
+        <ul className="frame reveal grid grid-cols-2 gap-px sm:grid-cols-3 lg:grid-cols-4">
           {skills.map((s) => (
-            <li key={s} className="rounded border border-line bg-surface px-4 py-2 font-mono text-sm text-soft">
+            <li
+              key={s}
+              className="px-6 py-8 font-display text-2xl font-semibold tracking-[-0.03em] shadow-[0_0_0_1px_var(--color-line)]"
+            >
               {s}
             </li>
           ))}
         </ul>
       </Section>
 
-      <Section id="experience" num="03" title="Experience">
-        <ol className="relative space-y-12 border-l border-line pl-8">
-          {jobs.map((job) => (
-            <li key={job.company} className="reveal relative">
-              <span
-                aria-hidden="true"
-                className="absolute -left-[37px] top-1.5 size-3 rounded-full border-2 border-accent bg-bg"
-              />
-              <p className="font-mono text-[13px] text-soft">{job.range}</p>
-              <h3 className="mt-1 text-xl font-medium text-fg">
-                {job.title}{' '}
-                <span className="text-accent">
-                  @{' '}
-                  <a href={job.url} target="_blank" rel="noopener noreferrer" className="inline-link">
-                    {job.company}
-                  </a>
-                </span>
-              </h3>
-              <ul className="arrow-list mt-5 space-y-2.5 text-lg leading-relaxed">
+      <Section id="experience" title="Experience">
+        <ol className="frame">
+          {jobs.map((job, i) => (
+            <li key={job.company} className={`reveal grid gap-6 p-6 sm:p-10 lg:grid-cols-[260px_1fr] ${i > 0 ? 'border-t border-line' : ''}`}>
+              <div>
+                <p className="text-[15px] text-muted">{job.range}</p>
+                <h3 className="mt-2 text-xl font-medium">{job.title}</h3>
+                <a
+                  href={job.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted underline decoration-line underline-offset-4 hover:text-fg"
+                >
+                  {job.company}
+                </a>
+                <TechList items={skills.slice(0, 4)} className="mt-5" />
+              </div>
+              <ul className="space-y-4">
                 {job.points.map((p) => (
-                  <li key={p}>{p}</li>
+                  <li key={p} className="flex gap-3 text-[17px] leading-relaxed text-muted">
+                    <span aria-hidden="true" className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" />
+                    {p}
+                  </li>
                 ))}
               </ul>
             </li>
@@ -89,7 +117,7 @@ export default function AboutPage() {
         </ol>
       </Section>
 
-      <ContactCta />
+      <ClosingCta />
     </>
   );
 }

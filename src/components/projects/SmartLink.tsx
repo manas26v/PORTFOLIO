@@ -1,8 +1,14 @@
 import Link from 'next/link';
 import type { ComponentProps } from 'react';
-import { isExternal } from '@/lib/url';
+import { asset, isExternal } from '@/lib/url';
 
-/** next/link for internal routes, a new-tab <a> for external URLs, plain text when there's no URL. */
+/**
+ * One link component for every kind of href:
+ * - external URLs / mailto → new-tab <a>
+ * - static files in public/ (anything with an extension) → <a> with the base path added
+ * - app routes → next/link (which adds the base path itself)
+ * - no href → plain text
+ */
 export default function SmartLink({
   href,
   children,
@@ -10,8 +16,16 @@ export default function SmartLink({
 }: Omit<ComponentProps<'a'>, 'href'> & { href?: string }) {
   if (!href) return <span {...(props as ComponentProps<'span'>)}>{children}</span>;
   if (isExternal(href)) {
+    const newTab = !href.startsWith('mailto:');
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      <a href={href} {...(newTab && { target: '_blank', rel: 'noopener noreferrer' })} {...props}>
+        {children}
+      </a>
+    );
+  }
+  if (/\.[a-z0-9]+$/i.test(href)) {
+    return (
+      <a href={asset(href)} {...props}>
         {children}
       </a>
     );
