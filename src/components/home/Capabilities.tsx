@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ApiVisual, DataVisual, PerformanceVisual, SecurityVisual } from './MockPanels';
+import { ApiVisual, BleedContext, DataVisual, PerformanceVisual, SecurityVisual } from './MockPanels';
 
 type Item = { title: string; body: string; visual: ReactNode };
 
@@ -71,20 +71,24 @@ export default function Capabilities() {
       {/* Desktop: pinned, scroll-driven */}
       <div ref={trackRef} className="relative hidden lg:block" style={{ height: `${items.length * 75 + 25}vh` }}>
         <div className="sticky top-16 flex h-[calc(100vh-4rem)] items-center">
-          <div className="container-x grid grid-cols-[minmax(0,1fr)_340px] items-center gap-20">
-            <div className="relative h-[min(560px,70vh)]">
-              {items.map((item, i) => (
-                <div
-                  key={item.title}
-                  aria-hidden={active !== i}
-                  className={`absolute inset-0 transition-all duration-700 ease-smooth ${
-                    active === i ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
-                  }`}
-                >
-                  {item.visual}
-                </div>
-              ))}
-            </div>
+          {/* Visual column bleeds off the left edge; the list stays on the page grid
+              (right padding = the container's side margin). */}
+          <div className="grid w-full grid-cols-[minmax(0,1fr)_340px] items-center gap-20 pr-[max(2.5rem,calc((100%-1232px)/2))]">
+            <BleedContext.Provider value={true}>
+              <div className="relative h-[min(620px,72vh)]">
+                {items.map((item, i) => (
+                  <div
+                    key={item.title}
+                    aria-hidden={active !== i}
+                    className={`absolute inset-0 transition-all duration-700 ease-smooth ${
+                      active === i ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
+                    }`}
+                  >
+                    {item.visual}
+                  </div>
+                ))}
+              </div>
+            </BleedContext.Provider>
             <ol>
               {items.map((item, i) => (
                 <li key={item.title} className="border-b border-line last:border-0">

@@ -1,4 +1,7 @@
-import type { ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
+
+/** When true, panels run off the left edge of the screen (desktop capabilities section). */
+export const BleedContext = createContext(false);
 
 /* Product-style UI mockups used as section visuals. Purely decorative. */
 
@@ -31,9 +34,16 @@ function SideHeader({ tabs, active }: { tabs: string[]; active: number }) {
 
 /** Canvas on the left, inspector on the right — the frame shared by all four visuals. */
 function Workspace({ canvas, inspector, canvasClass }: { canvas: ReactNode; inspector: ReactNode; canvasClass: string }) {
+  const bleed = useContext(BleedContext);
   return (
-    <Panel className="grid h-full grid-cols-[1fr_minmax(0,230px)] max-sm:grid-cols-1">
-      <div className={`relative min-h-[260px] overflow-hidden ${canvasClass}`}>{canvas}</div>
+    <Panel
+      className={`grid h-full grid-cols-[1fr_minmax(0,230px)] max-sm:grid-cols-1 ${bleed ? 'rounded-l-none border-l-0' : ''}`}
+    >
+      <div className={`relative min-h-[260px] overflow-hidden ${canvasClass}`}>
+        {/* In bleed mode the background spans to the screen edge while the mock
+            itself stays anchored next to the inspector. */}
+        <div className={bleed ? 'absolute inset-y-0 right-0 w-full max-w-[640px]' : 'contents'}>{canvas}</div>
+      </div>
       <div className="border-l border-panel-line max-sm:hidden">{inspector}</div>
     </Panel>
   );
