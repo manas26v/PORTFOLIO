@@ -4,6 +4,7 @@ import Showcase from '@/components/home/Showcase';
 import TechStrip from '@/components/home/TechStrip';
 import Capabilities from '@/components/home/Capabilities';
 import Bento from '@/components/home/Bento';
+import ProfileSection from '@/components/home/ProfileSection';
 import WorkGrid from '@/components/projects/WorkGrid';
 import PostList from '@/components/blog/PostList';
 import ClosingCta from '@/components/ClosingCta';
@@ -51,6 +52,8 @@ export default function HomePage() {
           <PostList posts={posts} />
         </Section>
       )}
+
+      <ProfileSection />
 
       <ClosingCta />
     </>
