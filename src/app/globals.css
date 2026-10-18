@@ -1,0 +1,248 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ============================================
+   Design tokens — the original zinc-900 palette with the blue accent.
+   Use as Tailwind utilities: bg-bg, bg-surface, text-fg, text-accent, border-line…
+   ============================================ */
+@theme {
+  --color-bg: #18181b;
+  --color-surface: #27272a;
+  --color-line: #3f3f46;
+  --color-muted: #a1a1aa;
+  --color-soft: #d4d4d8;
+  --color-fg: #f4f4f5;
+  --color-accent: #4d9fff;
+  --color-accent-tint: rgb(77 159 255 / 0.1);
+  --color-warm: #ff8c42;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-incognito), var(--font-inter), ui-serif, Georgia, serif;
+  --font-mono: var(--font-gitlab-mono), ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --ease-smooth: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --shadow-panel: 0 10px 30px -15px rgb(0 0 0 / 0.7);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg text-muted font-sans antialiased;
+    overflow-x: clip;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  ::selection {
+    background: rgb(77 159 255 / 0.3);
+    color: var(--color-fg);
+  }
+  :focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Outlined accent button used for CTAs. */
+  .btn {
+    @apply inline-flex items-center gap-2 rounded border border-accent px-7 py-4 font-mono text-sm leading-none text-accent transition-all duration-300 ease-smooth;
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    @apply bg-accent-tint -translate-y-0.5;
+    box-shadow: 4px 4px 0 0 var(--color-accent);
+  }
+  .btn-sm {
+    @apply px-4 py-2.5 text-xs;
+  }
+
+  /* Accent link with a growing underline. */
+  .inline-link {
+    @apply relative text-accent;
+  }
+  .inline-link::after {
+    content: '';
+    @apply absolute -bottom-0.5 left-0 h-px w-0 bg-accent opacity-50 transition-all duration-300 ease-smooth;
+  }
+  .inline-link:hover::after,
+  .inline-link:focus-visible::after {
+    @apply w-full;
+  }
+
+  /* "01. About Me ———" section heading. */
+  .numbered-heading {
+    @apply relative mb-10 flex w-full items-center font-mono text-2xl font-semibold text-fg sm:whitespace-nowrap sm:text-[32px];
+  }
+  .numbered-heading::after {
+    content: '';
+    @apply relative top-0.5 ml-5 block h-px min-w-8 flex-1 bg-line sm:w-72 sm:flex-none;
+  }
+  .numbered-heading > .num {
+    @apply mr-2.5 font-mono text-base font-normal text-accent sm:text-xl;
+  }
+
+  /* ▹ bullet list */
+  .arrow-list > li {
+    @apply relative pl-7;
+  }
+  .arrow-list > li::before {
+    content: '▹';
+    @apply absolute left-0 text-accent;
+  }
+
+  /* Blog prose tuned to the palette. */
+  .prose-portfolio {
+    @apply prose prose-lg prose-invert max-w-none;
+    --tw-prose-body: var(--color-soft);
+    --tw-prose-headings: var(--color-fg);
+    --tw-prose-links: var(--color-accent);
+    --tw-prose-bold: var(--color-fg);
+    --tw-prose-bullets: var(--color-accent);
+    --tw-prose-counters: var(--color-accent);
+    --tw-prose-quotes: var(--color-soft);
+    --tw-prose-quote-borders: var(--color-accent);
+    --tw-prose-code: var(--color-fg);
+    --tw-prose-hr: var(--color-line);
+    --tw-prose-th-borders: var(--color-line);
+    --tw-prose-td-borders: var(--color-line);
+    --tw-prose-pre-bg: var(--color-surface);
+  }
+  .prose-portfolio :where(h2, h3, h4) a {
+    @apply text-inherit no-underline;
+  }
+  .prose-portfolio :where(h2, h3) {
+    @apply font-mono;
+  }
+  .prose-portfolio :not(pre) > code {
+    @apply rounded bg-surface px-1.5 py-0.5 font-mono text-[0.85em] font-normal before:content-none after:content-none;
+  }
+  .prose-portfolio pre {
+    @apply border border-line font-mono text-sm leading-relaxed;
+  }
+  .prose-portfolio figure[data-rehype-pretty-code-figure] {
+    @apply my-6;
+  }
+}
+
+/* ============================================
+   Scroll reveal. Hidden only once JS has run (html.js), so content is never
+   lost for crawlers or no-JS visitors.
+   ============================================ */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s var(--ease-smooth),
+    transform 0.6s var(--ease-smooth);
+}
+.js .reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Above-the-fold entrance (hero). Pure CSS so the largest text on the page
+   never waits for JavaScript; it starts as the splash loader finishes. */
+.fade-up {
+  animation: fade-up 0.6s var(--ease-smooth) both;
+  animation-delay: calc(var(--d, 0) * 90ms + 2.6s);
+}
+.loader-seen .fade-up {
+  animation-delay: calc(var(--d, 0) * 90ms + 0.1s);
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+}
+
+/* ============================================
+   First-visit loader (logo wipe). Shown once per session; the inline script in
+   the root layout adds .loader-seen to skip it. The fade-out is pure CSS so the
+   page can never get stuck behind it.
+   ============================================ */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  animation: loader-out 0.5s ease 2.8s forwards;
+}
+.loader-seen .loader {
+  display: none;
+}
+.loader__path {
+  fill: #3b9eff;
+  filter: drop-shadow(0 0 8px rgb(59 158 255 / 0.45));
+}
+.loader__sweep {
+  animation: loader-wipe 2.8s cubic-bezier(0.6, 0.05, 0.3, 1) infinite;
+}
+@keyframes loader-wipe {
+  0% { transform: translateX(-900px); }
+  55% { transform: translateX(0); }
+  80% { transform: translateX(0); }
+  100% { transform: translateX(900px); }
+}
+@keyframes loader-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* ============================================
+   Hero isometric graphic
+   ============================================ */
+.iso-graphic {
+  opacity: 0;
+  animation: iso-in 1s ease 0.6s forwards;
+}
+.loader-seen .iso-graphic {
+  animation-delay: 0.1s;
+}
+/* Each edge is mostly drawn (192) with a 64-long gap travelling through it;
+   per-line negative delays keep edges out of phase. */
+.iso-graphic .il {
+  stroke-dasharray: 192 64;
+  animation: iso-dash 6s linear infinite;
+}
+.iso-graphic .in {
+  animation: iso-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes iso-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes iso-dash {
+  to { stroke-dashoffset: 256; }
+}
+@keyframes iso-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Mobile menu open: blur the page behind the drawer. */
+body.menu-open {
+  overflow: hidden;
+}
+body.menu-open #content,
+body.menu-open footer {
+  filter: blur(5px) brightness(0.7);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.25s var(--ease-smooth);
+}
