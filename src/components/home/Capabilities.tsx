@@ -29,31 +29,58 @@ const items: Item[] = [
   },
 ];
 
+// Slide-in distance for each panel as it scrolls into view.
+const SLIDE_PX = 40;
+
 /**
  * Desktop: tall panels scroll by normally on the left (running off the screen
  * edge) while the list stays sticky on the right. An item becomes active once
  * its panel's top passes the middle of the viewport.
+ *
+ * Each panel also slides in from the left and fades up, tied to scroll
+ * position: it starts at -40px / transparent when its top enters at the bottom
+ * of the screen and settles once its top reaches the middle.
+ *
  * Mobile: a simple stacked list, each item with its visual.
  */
 export default function Capabilities() {
+  // Outer elements are measured (never transformed); inner ones are animated.
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      const mid = window.innerHeight / 2;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
       let next = 0;
       panelRefs.current.forEach((el, i) => {
-        if (el && el.getBoundingClientRect().top < mid) next = i;
+        if (!el) return;
+        const top = el.getBoundingClientRect().top;
+        if (top < vh / 2) next = i;
+
+        const slide = slideRefs.current[i];
+        if (!slide) return;
+        const p = reduced ? 1 : Math.min(Math.max((vh - top) / (vh / 2), 0), 1);
+        slide.style.opacity = String(p);
+        slide.style.transform = p === 1 ? '' : `translate3d(${-SLIDE_PX * (1 - p)}px, 0, 0)`;
       });
       setActive(next);
     };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
     };
   }, []);
 
@@ -87,7 +114,14 @@ export default function Capabilities() {
                 aria-hidden="true"
                 className="h-[min(880px,82vh)] min-h-[640px]"
               >
-                {item.visual}
+                <div
+                  ref={(el) => {
+                    slideRefs.current[i] = el;
+                  }}
+                  className="edge-fade h-full will-change-transform"
+                >
+                  {item.visual}
+                </div>
               </div>
             ))}
           </div>
