@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Hero from '@/components/home/Hero';
 import Showcase from '@/components/home/Showcase';
+import Showreel from '@/components/home/Showreel';
 import TechStrip from '@/components/home/TechStrip';
 import Capabilities from '@/components/home/Capabilities';
 import Bento from '@/components/home/Bento';
@@ -22,6 +23,7 @@ export default function HomePage() {
     <>
       <Hero />
       <Showcase />
+      <Showreel />
       <TechStrip />
       <Capabilities />
 
