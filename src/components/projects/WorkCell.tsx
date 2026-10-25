@@ -11,6 +11,7 @@ export default function WorkCell({ project, index, className = '' }: { project: 
     <article className={`group relative flex flex-col p-6 sm:p-10 ${className}`}>
       <div className="flex items-start justify-between gap-6">
         <div>
+          {project.kind && <p className="mb-2 text-[13px] font-medium text-muted">{project.kind}</p>}
           <h3 className="text-xl font-medium tracking-[-0.01em] sm:text-[22px]">
             <SmartLink href={href} className={href ? 'after:absolute after:inset-0' : ''}>
               {project.title}

@@ -51,6 +51,11 @@ export default async function ProjectPage({ params }: Props) {
 
         <header className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end">
           <div>
+            {project.kind && (
+              <p className="fade-up eyebrow mb-5" style={{ '--d': 0 } as React.CSSProperties}>
+                {project.kind}
+              </p>
+            )}
             <h1 className="fade-up display-xl" style={{ '--d': 1 } as React.CSSProperties}>
               {project.title}
             </h1>

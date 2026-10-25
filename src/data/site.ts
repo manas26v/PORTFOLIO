@@ -6,25 +6,27 @@ export const siteConfig = {
   name: 'Manas Ranjan Barik',
   shortName: 'Manas',
   title: 'Manas Ranjan Barik | Software Engineer',
-  jobTitle: 'Software Developer',
+  jobTitle: 'Software Engineer',
   description:
-    'Manas Ranjan Barik is a software developer building reliable backend systems, APIs, and data-driven products with Node.js, TypeScript, PostgreSQL, and Python.',
+    'Manas Ranjan Barik is a full stack developer building multi-tenant SaaS and AI-enabled applications with TypeScript, Node.js, NestJS, React and PostgreSQL.',
   // Set by the deploy workflow from the GitHub Pages config; no trailing slash.
   url: (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, ''),
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
   email: 'mrbarik2002@gmail.com',
-  location: 'India',
+  location: 'Bangalore, India',
   resume: '/Manas_Ranjan_Barik_Resume.pdf',
   employer: { name: 'DataCaffe.ai', url: 'https://datacaffe.ai' },
   keywords: [
     'Manas Ranjan Barik',
-    'Software Developer',
-    'Backend Engineer',
+    'Software Engineer',
+    'Full Stack Developer',
     'Node.js',
+    'NestJS',
     'TypeScript',
+    'React',
     'PostgreSQL',
-    'Python',
-    'FastAPI',
+    'LLM integration',
+    'Multi-tenant SaaS',
     'Portfolio',
   ],
 } as const;
@@ -32,8 +34,8 @@ export const siteConfig = {
 export type SocialIcon = 'github' | 'linkedin';
 
 export const socials: { name: string; url: string; icon: SocialIcon }[] = [
-  { name: 'GitHub', url: 'https://github.com/manasvoid0', icon: 'github' },
-  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/manas-ranjan-barik-a2917927a/', icon: 'linkedin' },
+  { name: 'GitHub', url: 'https://github.com/manas26v', icon: 'github' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/manas-ranjan-barik-software-developer', icon: 'linkedin' },
 ];
 
 export const navLinks = [

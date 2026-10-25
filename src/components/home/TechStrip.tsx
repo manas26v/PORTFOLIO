@@ -1,4 +1,4 @@
-const tech = ['Node.js', 'TypeScript', 'PostgreSQL', 'Express', 'Python', 'FastAPI', 'Snowflake', 'Ollama'];
+const tech = ['TypeScript', 'Node.js', 'NestJS', 'React', 'PostgreSQL', 'Redis', 'Snowflake', 'Python'];
 
 export default function TechStrip() {
   return (

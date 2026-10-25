@@ -46,8 +46,8 @@ export default function Bento() {
           </div>
           <p className="mt-8 text-[13px] font-medium text-muted">Experience</p>
           <p className="mt-1.5 max-w-lg text-lg leading-snug">
-            {job.title} at {job.company} since {job.range.split(' - ')[0]}: APIs, data integrations and multi-tenant
-            security.
+            {job.title} at {job.company} since {job.range.split(/\s[–-]\s/)[0]}: the Breww.ai chat backend, LLM tool
+            execution and multi-tenant access control.
           </p>
         </div>
 
@@ -90,10 +90,10 @@ export default function Bento() {
               <circle cx="20" cy="40" r="5" fill="#000" stroke="#777" />
               <circle cx="280" cy="170" r="9" fill="#2f8cff" />
             </svg>
-            <span className="absolute left-0 top-0 font-mono text-[11px] text-faint">p95 latency</span>
+            <span className="absolute left-0 top-0 font-mono text-[11px] text-faint">failed imports</span>
           </div>
-          <p className="mt-8 text-[13px] font-medium text-muted">Performance</p>
-          <p className="mt-1.5 text-lg leading-snug">Profiling queries and services until the slow paths disappear.</p>
+          <p className="mt-8 text-[13px] font-medium text-muted">Reliability</p>
+          <p className="mt-1.5 text-lg leading-snug">Schema sync and automated retries cut failed data imports by 40%.</p>
         </div>
 
         {/* Toolbox */}
@@ -108,7 +108,7 @@ export default function Bento() {
           </ul>
           <p className="mt-8 text-[13px] font-medium text-muted">Toolbox</p>
           <p className="mt-1.5 max-w-lg text-lg leading-snug">
-            The stack I reach for daily, from TypeScript services to Python and FastAPI.
+            The stack I reach for daily, from NestJS services and React to PostgreSQL and Redis.
           </p>
         </div>
       </div>

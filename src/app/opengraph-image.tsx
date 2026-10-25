@@ -7,5 +7,5 @@ export const size = ogSize;
 export const contentType = 'image/png';
 
 export default function Image() {
-  return renderOgImage({ eyebrow: siteConfig.jobTitle, title: 'Building reliable systems behind great products.' });
+  return renderOgImage({ eyebrow: siteConfig.jobTitle, title: 'Full stack developer building multi-tenant SaaS and AI products.' });
 }

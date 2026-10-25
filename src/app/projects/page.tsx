@@ -8,7 +8,7 @@ import { pageMetadata } from '@/lib/metadata';
 
 export const metadata = pageMetadata({
   title: 'Projects',
-  description: 'Selected projects: local-first AI tools, backend systems and web applications.',
+  description: 'Projects by Manas Ranjan Barik: a local RAG tutor and plagiarism detector, an ATS résumé builder, and a DuckDB data pipeline.',
   path: '/projects/',
 });
 
@@ -18,22 +18,24 @@ export default function ProjectsPage() {
       <PageHeader
         eyebrow="Projects"
         title="Things I've built."
-        intro="From local-first AI tooling to backend services. Featured projects have full write-ups."
+        intro="Local-first AI tools, a résumé builder and data experiments. Each one has a full write-up."
       />
 
       <div className="container-x">
         <WorkGrid projects={featuredProjects} />
       </div>
 
-      <Section id="archive" title="Other noteworthy projects">
-        <ProjectFilter
-          items={otherProjects.map((p) => ({
-            key: p.slug,
-            tech: p.tech,
-            node: <ProjectCard project={p} as="article" />,
-          }))}
-        />
-      </Section>
+      {otherProjects.length > 0 && (
+        <Section id="archive" title="Other noteworthy projects">
+          <ProjectFilter
+            items={otherProjects.map((p) => ({
+              key: p.slug,
+              tech: p.tech,
+              node: <ProjectCard project={p} as="article" />,
+            }))}
+          />
+        </Section>
+      )}
 
       <ClosingCta />
     </>

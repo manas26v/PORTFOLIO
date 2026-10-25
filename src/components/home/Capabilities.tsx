@@ -1,31 +1,31 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ApiVisual, BleedContext, DataVisual, PerformanceVisual, SecurityVisual } from './MockPanels';
+import { BleedContext, ChatVisual, DataVisual, SecurityVisual, UsageVisual } from './MockPanels';
 
 type Item = { title: string; body: string; visual: ReactNode };
 
-// Copy drawn from the DataCaffe.ai role.
+// Copy drawn from the DataCaffe.ai role on the résumé.
 const items: Item[] = [
   {
-    title: 'APIs',
-    body: 'Scalable REST APIs and backend services in Node.js, Express.js and TypeScript, built to run reliably in production.',
-    visual: <ApiVisual />,
+    title: 'AI chat',
+    body: 'Backend services for Breww.ai, a multi-tenant AI chat app: conversation processing, message persistence, LLM integrations and tool execution.',
+    visual: <ChatVisual />,
   },
   {
     title: 'Data',
-    body: 'Integrations that bring Snowflake, PostgreSQL and Excel together, so data flows cleanly into reporting across business systems.',
+    body: 'Snowflake and Excel integrations with schema synchronization and automated retries, cutting failed data imports by 40%.',
     visual: <DataVisual />,
   },
   {
     title: 'Security',
-    body: 'PostgreSQL Row-Level Security policies that enforce tenant-level isolation in multi-tenant applications.',
+    body: 'JWT authentication, role-based access control, row-level security and workspace isolation for 100+ users across multiple workspaces.',
     visual: <SecurityVisual />,
   },
   {
-    title: 'Performance',
-    body: 'Tuning services and database queries, and contributing to reviews and architecture discussions that keep systems fast.',
-    visual: <PerformanceVisual />,
+    title: 'Usage',
+    body: 'Per-user API usage and LLM token tracking with quota management, keeping resource consumption visible and under control.',
+    visual: <UsageVisual />,
   },
 ];
 

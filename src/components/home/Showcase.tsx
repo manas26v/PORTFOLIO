@@ -44,11 +44,11 @@ const rowOne: Tile[] = [
     className: 'bg-[#4be05a]',
     content: (
       <div className="absolute left-8 top-1/2 w-[120%] -translate-y-1/3 -rotate-[10deg] rounded-2xl bg-[#0b0b0b] p-5 font-mono text-[12px] leading-relaxed text-[#c8c8c8] shadow-2xl sm:text-[13px]">
-        <p className="text-[#4be05a]">$ curl api/v1/reports?tenant=acme</p>
-        <p>HTTP/1.1 200 OK · 38 ms</p>
-        <p className="mt-2 text-white">{'{ "rows": 1204, "sources": ["snowflake", "postgres"] }'}</p>
-        <p className="mt-2 text-[#4be05a]">$ npm run test</p>
-        <p>✓ 214 passed</p>
+        <p className="text-[#4be05a]">$ curl -X POST api/chat/:id -H &quot;Authorization: Bearer …&quot;</p>
+        <p>HTTP/1.1 200 OK</p>
+        <p className="mt-2 text-white">{'{ "role": "assistant", "tool": "run_query", "tokens": 412 }'}</p>
+        <p className="mt-2 text-[#4be05a]">$ nest start</p>
+        <p>✓ ChatModule initialized</p>
       </div>
     ),
   },
@@ -57,8 +57,8 @@ const rowOne: Tile[] = [
     className: 'bg-gradient-to-br from-[#0a0a0a] to-[#1d1d1d]',
     content: (
       <div className="absolute inset-0 flex flex-col justify-end p-5">
-        <p className="font-display text-5xl font-semibold tracking-[-0.04em]">99.9%</p>
-        <p className="mt-1 text-xs text-muted">API uptime, last 90 days</p>
+        <p className="font-display text-5xl font-semibold tracking-[-0.04em]">−40%</p>
+        <p className="mt-1 text-xs text-muted">failed data imports, after automated retries</p>
         <div className="mt-4 flex h-8 items-end gap-[3px]">
           {Array.from({ length: 24 }, (_, i) => (
             <span key={i} className="flex-1 rounded-sm bg-brand-green" style={{ height: `${55 + ((i * 37) % 45)}%` }} />
@@ -128,7 +128,7 @@ const rowTwo: Tile[] = [
     className: 'bg-gradient-to-br from-brand-purple via-[#6d28d9] to-[#1e0b4b]',
     content: (
       <div className="absolute inset-0 flex flex-wrap content-center justify-center gap-2 p-8">
-        {[...skills, 'Snowflake', 'REST', 'Ollama', 'FAISS'].map((s) => (
+        {[...skills, 'Express', 'DuckDB', 'Prisma', 'TypeORM'].map((s) => (
           <span key={s} className="rounded-full bg-white/12 px-3.5 py-1.5 text-sm font-medium text-white backdrop-blur">
             {s}
           </span>

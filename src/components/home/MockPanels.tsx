@@ -125,51 +125,45 @@ function Workspace({
   );
 }
 
-export function ApiVisual() {
+export function ChatVisual() {
   return (
     <Workspace
       track={{
-        lead: { label: 'GET /reports/:id', className: 'border-brand-orange bg-brand-orange/15 text-brand-orange' },
-        segments: { labels: ['auth', 'validate', 'query', 'respond'], className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
+        lead: { label: 'POST /chat/:conversationId', className: 'border-brand-orange bg-brand-orange/15 text-brand-orange' },
+        segments: { labels: ['auth', 'LLM', 'tool call', 'persist'], className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
       }}
       canvasClass="bg-[radial-gradient(80%_80%_at_30%_30%,#1e3a8a,#020617)]"
       canvas={
-        <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 rounded-xl border border-white/10 bg-black/60 p-5 font-mono text-[13px] leading-relaxed backdrop-blur sm:inset-x-10">
-          <p>
-            <span className="rounded bg-brand-green/20 px-1.5 text-brand-green">GET</span>{' '}
-            <span className="text-fg">/api/v1/reports/:id</span>
-          </p>
-          <p className="mt-3 text-faint">{'// 200 OK · 41 ms'}</p>
-          <p className="text-muted">{'{'}</p>
-          <p className="pl-4 text-muted">
-            &quot;id&quot;: <span className="text-brand-light-blue">&quot;rpt_1042&quot;</span>,
-          </p>
-          <p className="pl-4 text-muted">
-            &quot;status&quot;: <span className="text-brand-light-blue">&quot;ready&quot;</span>,
-          </p>
-          <p className="pl-4 text-muted">
-            &quot;rows&quot;: <span className="text-brand-orange">1204</span>
-          </p>
-          <p className="text-muted">{'}'}</p>
+        <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 space-y-3 sm:inset-x-10">
+          <div className="ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-md bg-white/90 px-4 py-2.5 text-[13px] text-black">
+            How many orders did EMEA ship last week?
+          </div>
+          <div className="w-fit rounded-xl border border-white/10 bg-black/60 px-3 py-2 font-mono text-[12px] text-muted backdrop-blur">
+            <span className="text-brand-orange">⚙ tool</span> run_query(<span className="text-brand-light-blue">&quot;orders&quot;</span>, region:{' '}
+            <span className="text-brand-light-blue">&quot;EMEA&quot;</span>) <span className="text-brand-green">✓</span>
+          </div>
+          <div className="w-fit max-w-[85%] rounded-2xl rounded-bl-md border border-white/10 bg-black/60 px-4 py-2.5 text-[13px] text-fg backdrop-blur">
+            EMEA shipped <span className="text-brand-orange">1,204</span> orders last week — up 8% on the week before.
+          </div>
         </div>
       }
       inspector={
         <>
-          <SideHeader tabs={['Request', 'Schema']} active={0} />
+          <SideHeader tabs={['Request', 'Tools']} active={0} />
           <div className="space-y-4 p-3">
             <div className="space-y-1.5">
               <p className="text-[12px] text-muted">Route</p>
-              <Field label="GET" value="/reports/:id" />
-              <Field label="auth" value="bearer" />
+              <Field label="POST" value="/chat/:id" />
+              <Field label="auth" value="JWT" />
             </div>
             <div className="space-y-1.5">
-              <p className="text-[12px] text-muted">Validation</p>
-              <Field label="id" value="string · required" />
-              <Field label="tenant" value="from token" />
+              <p className="text-[12px] text-muted">Context</p>
+              <Field label="workspace" value="from token" />
+              <Field label="tools" value="run_query, preview_doc" />
             </div>
             <div className="flex items-center justify-between rounded-md bg-surface px-2.5 py-2 text-[12px]">
-              <span className="text-muted">Rate limit</span>
-              <span className="text-fg">100 / min</span>
+              <span className="text-muted">Messages</span>
+              <span className="text-fg">persisted</span>
             </div>
           </div>
         </>
@@ -187,8 +181,8 @@ export function DataVisual() {
   return (
     <Workspace
       track={{
-        lead: { label: 'sync job · every 15 min', className: 'border-block-green bg-block-green/15 text-brand-green' },
-        segments: { labels: ['extract', 'transform', 'load', 'report'], className: 'border-brand-light-blue bg-brand-light-blue/15 text-brand-light-blue' },
+        lead: { label: 'import · Snowflake + Excel', className: 'border-block-green bg-block-green/15 text-brand-green' },
+        segments: { labels: ['sync schema', 'import', 'retry', 'done'], className: 'border-brand-light-blue bg-brand-light-blue/15 text-brand-light-blue' },
       }}
       canvasClass="bg-[radial-gradient(80%_80%_at_70%_30%,#064e3b,#020617)]"
       canvas={
@@ -238,8 +232,8 @@ export function SecurityVisual() {
   return (
     <Workspace
       track={{
-        lead: { label: 'request · tenant=acme', className: 'border-brand-pink bg-block-pink/20 text-brand-pink' },
-        segments: { labels: ['token', 'set role', 'RLS check', 'rows'], className: 'border-brand-purple bg-block-indigo/30 text-[#c4b5fd]' },
+        lead: { label: 'request · workspace=acme', className: 'border-brand-pink bg-block-pink/20 text-brand-pink' },
+        segments: { labels: ['JWT', 'RBAC', 'RLS check', 'rows'], className: 'border-brand-purple bg-block-indigo/30 text-[#c4b5fd]' },
       }}
       canvasClass="bg-[radial-gradient(80%_80%_at_40%_30%,#4c1d95,#020617)]"
       canvas={
@@ -250,7 +244,7 @@ export function SecurityVisual() {
           ].map(([tenant, color]) => (
             <div key={tenant} className="rounded-xl border border-white/10 bg-black/60 p-4">
               <p className="flex items-center gap-2 text-[12px] text-muted">
-                <span className={`size-2 rounded-full ${color}`} /> tenant
+                <span className={`size-2 rounded-full ${color}`} /> workspace
               </p>
               <p className="mt-1 text-sm font-semibold">{tenant}</p>
               <div className="mt-4 space-y-1.5">
@@ -289,49 +283,53 @@ export function SecurityVisual() {
   );
 }
 
-export function PerformanceVisual() {
-  const bars = [
-    { label: 'Before', ms: 820, color: 'border-block-pink bg-block-pink/25' },
-    { label: 'Index', ms: 310, color: 'border-block-indigo bg-block-indigo/30' },
-    { label: 'Query plan', ms: 140, color: 'border-block-blue bg-block-blue/30' },
-    { label: 'Cache', ms: 38, color: 'border-block-green bg-block-green/25' },
+export function UsageVisual() {
+  const quota = 50000;
+  const rows = [
+    { label: 'workspace · acme', tokens: 41200, color: 'border-block-pink bg-block-pink/25' },
+    { label: 'workspace · globex', tokens: 27800, color: 'border-block-indigo bg-block-indigo/30' },
+    { label: 'workspace · initech', tokens: 16400, color: 'border-block-blue bg-block-blue/30' },
+    { label: 'workspace · umbrella', tokens: 6900, color: 'border-block-green bg-block-green/25' },
   ];
   return (
     <Workspace
       track={{
-        lead: { label: 'p95 · 820 ms → 38 ms', className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
-        segments: { labels: ['profile', 'index', 'plan', 'cache'], className: 'border-block-green bg-block-green/15 text-brand-green' },
+        lead: { label: 'LLM call · 1,284 tokens', className: 'border-select bg-block-blue/25 text-[#7cc4ff]' },
+        segments: { labels: ['count', 'attribute', 'check quota', 'record'], className: 'border-block-green bg-block-green/15 text-brand-green' },
       }}
       canvasClass="bg-panel"
       canvas={
         <div className="absolute inset-6 flex flex-col justify-center gap-3 sm:inset-10">
           <div className="mb-2 flex justify-between font-mono text-[11px] text-faint">
-            <span>0 ms</span>
-            <span>400</span>
-            <span>800</span>
+            <span>0</span>
+            <span>25k</span>
+            <span>50k tokens · quota</span>
           </div>
-          {bars.map((b) => (
-            <div key={b.label} className="flex items-center gap-3">
-              <div
-                className={`h-9 rounded-md border-[1.5px] shadow-[0_0_18px_-4px_currentColor] ${b.color}`}
-                style={{ width: `${Math.max((b.ms / 820) * 100, 6)}%` }}
-              />
-              <span className="shrink-0 font-mono text-[12px] text-muted">{b.ms} ms</span>
+          {rows.map((r) => (
+            <div key={r.label}>
+              <p className="mb-1 font-mono text-[11px] text-faint">{r.label}</p>
+              <div className="flex items-center gap-3">
+                <div
+                  className={`h-7 rounded-md border-[1.5px] shadow-[0_0_18px_-4px_currentColor] ${r.color}`}
+                  style={{ width: `${Math.max((r.tokens / quota) * 100, 6)}%` }}
+                />
+                <span className="shrink-0 font-mono text-[12px] text-muted">{Math.round((r.tokens / quota) * 100)}%</span>
+              </div>
             </div>
           ))}
         </div>
       }
       inspector={
         <>
-          <SideHeader tabs={['Profile', 'Plan']} active={0} />
+          <SideHeader tabs={['Usage', 'Quotas']} active={0} />
           <div className="space-y-1.5 p-3">
-            {bars.map((b) => (
-              <div key={b.label} className="flex justify-between rounded-md bg-surface px-2.5 py-2 text-[12px]">
-                <span className="text-muted">{b.label}</span>
-                <span>{b.ms} ms</span>
+            {rows.map((r) => (
+              <div key={r.label} className="flex justify-between rounded-md bg-surface px-2.5 py-2 text-[12px]">
+                <span className="text-muted">{r.label.replace('workspace · ', '')}</span>
+                <span>{(r.tokens / 1000).toFixed(1)}k</span>
               </div>
             ))}
-            <p className="pt-3 text-[12px] text-brand-green">p95 down 95%</p>
+            <p className="pt-3 text-[12px] text-brand-orange">acme · 82% of quota</p>
           </div>
         </>
       }

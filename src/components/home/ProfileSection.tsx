@@ -17,8 +17,8 @@ export default function ProfileSection() {
             The person behind the code
           </h2>
           <p className="reveal mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            I&apos;m {siteConfig.name}, a {siteConfig.jobTitle.toLowerCase()} at {siteConfig.employer.name}. I care
-            about clean code, sound system design and software that delivers real business value.
+            I&apos;m {siteConfig.name}, a {siteConfig.jobTitle.toLowerCase()} at {siteConfig.employer.name} in
+            Bangalore, with 1.8 years building multi-tenant SaaS and AI-enabled applications end to end.
           </p>
           <div className="reveal mt-8 flex flex-wrap gap-3">
             <Link href="/about/" className="pill-light">

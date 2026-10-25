@@ -2,14 +2,14 @@ import Image from 'next/image';
 import ClosingCta from '@/components/ClosingCta';
 import { PageHeader, Section, TechList } from '@/components/Section';
 import photo from '@/assets/about-me.jpg';
-import { jobs, skills } from '@/data/experience';
+import { education, jobs, skillGroups, summary } from '@/data/experience';
 import { siteConfig } from '@/data/site';
 import { pageMetadata } from '@/lib/metadata';
 import { asset } from '@/lib/url';
 
 export const metadata = pageMetadata({
   title: 'About',
-  description: `About ${siteConfig.name}: a software developer focused on scalable backend systems, APIs and databases.`,
+  description: `About ${siteConfig.name}: a full stack developer building multi-tenant SaaS and AI-enabled applications.`,
   path: '/about/',
 });
 
@@ -18,8 +18,8 @@ export default function AboutPage() {
     <>
       <PageHeader
         eyebrow="About"
-        title="Clean code, real business value."
-        intro="Software developer building scalable web applications, APIs and backend systems."
+        title="SaaS and AI, built end to end."
+        intro={`Full stack developer in ${siteConfig.location}, building multi-tenant SaaS and AI-enabled applications.`}
       />
 
       <div className="container-x">
@@ -36,18 +36,9 @@ export default function AboutPage() {
             />
           </div>
           <div className="space-y-5 border-t border-line p-6 text-[17px] leading-relaxed text-muted sm:p-10 lg:border-t-0">
+            <p className="text-fg">{summary}</p>
             <p>
-              <span className="text-fg">I&apos;m a Software Developer</span> with experience building scalable web
-              applications, APIs, and backend systems. My primary focus is on designing reliable, high-performance
-              solutions using Node.js, Express.js, TypeScript, PostgreSQL, and modern JavaScript technologies.
-            </p>
-            <p>
-              Over the past few years, I&apos;ve worked on developing REST APIs, optimizing database operations,
-              integrating third-party services, and building systems that support data-driven business workflows. I
-              enjoy solving complex technical challenges and creating software that is both maintainable and scalable.
-            </p>
-            <p>
-              Currently, I&apos;m building scalable applications at{' '}
+              At{' '}
               <a
                 href={siteConfig.employer.url}
                 target="_blank"
@@ -55,10 +46,13 @@ export default function AboutPage() {
                 className="text-fg underline decoration-line underline-offset-4 hover:decoration-fg"
               >
                 {siteConfig.employer.name}
-              </a>
-              , where I contribute to backend architecture, system integrations, and performance-focused development.
-              I&apos;m passionate about clean code, system design, and continuously improving my engineering skills to
-              build products that deliver real business value.
+              </a>{' '}
+              I build backend services for Breww.ai, a multi-tenant AI chat application: conversation processing, LLM
+              integrations and tool execution, plus the access control, usage tracking and data integrations around them.
+            </p>
+            <p>
+              Outside work I build local-first AI tools — a RAG tutor with a plagiarism detector, and an ATS résumé
+              builder — and data experiments with DuckDB and Parquet.
             </p>
             <div className="flex flex-wrap gap-3 pt-3">
               <a href={asset(siteConfig.resume)} target="_blank" rel="noopener noreferrer" className="pill-light">
@@ -73,18 +67,23 @@ export default function AboutPage() {
       </div>
 
       <Section id="toolbox" title="Toolbox">
-        <p className="reveal -mt-6 mb-8 text-lg text-muted">Technologies I&apos;ve been working with recently.</p>
-        {/* Each cell draws its own 1px ring, so a partly filled last row stays black instead of grey. */}
-        <ul className="frame reveal grid grid-cols-2 gap-px sm:grid-cols-3 lg:grid-cols-4">
-          {skills.map((s) => (
-            <li
-              key={s}
-              className="px-6 py-8 font-display text-2xl font-semibold tracking-[-0.03em] shadow-[0_0_0_1px_var(--color-line)]"
+        <dl className="frame reveal">
+          {skillGroups.map((g, i) => (
+            <div
+              key={g.label}
+              className={`grid gap-3 p-6 sm:grid-cols-[200px_1fr] sm:items-center sm:p-8 ${i > 0 ? 'border-t border-line' : ''}`}
             >
-              {s}
-            </li>
+              <dt className="text-[15px] font-medium text-muted">{g.label}</dt>
+              <dd className="flex flex-wrap gap-x-6 gap-y-2">
+                {g.items.map((item) => (
+                  <span key={item} className="font-display text-2xl font-semibold tracking-[-0.03em]">
+                    {item}
+                  </span>
+                ))}
+              </dd>
+            </div>
           ))}
-        </ul>
+        </dl>
       </Section>
 
       <Section id="experience" title="Experience">
@@ -102,7 +101,8 @@ export default function AboutPage() {
                 >
                   {job.company}
                 </a>
-                <TechList items={skills.slice(0, 4)} className="mt-5" />
+                <p className="text-[15px] text-faint">{job.location}</p>
+                <TechList items={['TypeScript', 'NestJS', 'React', 'PostgreSQL']} className="mt-5" />
               </div>
               <ul className="space-y-4">
                 {job.points.map((p) => (
@@ -115,6 +115,19 @@ export default function AboutPage() {
             </li>
           ))}
         </ol>
+      </Section>
+
+      <Section id="education" title="Education">
+        <div className="frame reveal grid gap-3 p-6 sm:grid-cols-[260px_1fr] sm:p-10">
+          <p className="text-[15px] text-muted">{education.range}</p>
+          <div>
+            <h3 className="text-xl font-medium">{education.degree}</h3>
+            <p className="mt-1 text-muted">
+              {education.school} · {education.location}
+            </p>
+            <p className="mt-3 text-[15px] text-faint">{education.grade}</p>
+          </div>
+        </div>
       </Section>
 
       <ClosingCta />

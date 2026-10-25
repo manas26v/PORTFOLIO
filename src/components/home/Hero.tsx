@@ -7,11 +7,11 @@ export default function Hero() {
   return (
     <section aria-labelledby="hero-title" className="container-x pb-20 pt-36 text-center sm:pt-40 md:pb-28">
       <h1 id="hero-title" style={d(0)} className="fade-up display-xl mx-auto max-w-[15ch]">
-        Reliable systems, built to scale
+        AI products, built to scale
       </h1>
       <p style={d(1)} className="fade-up mx-auto mt-7 max-w-[34rem] text-lg font-medium leading-snug text-muted sm:text-[22px]">
-        I&apos;m {siteConfig.name}, a software developer building reliable systems behind great products.
-        Currently at{' '}
+        I&apos;m {siteConfig.name}, a full stack developer building multi-tenant SaaS and AI-enabled
+        applications. Currently at{' '}
         <a
           href={siteConfig.employer.url}
           target="_blank"
