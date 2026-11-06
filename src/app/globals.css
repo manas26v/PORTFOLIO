@@ -1,13 +1,13 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
-/* ============================================
+/* ====================================================================
    Design tokens — pure-black canvas, near-white type, hairline borders,
    pill buttons and a single bright blue, with neon accents for visuals.
    Use as utilities: bg-bg, bg-panel, text-fg, text-muted, border-line…
    ============================================ */
 @theme {
-  --color-bg: #000;
+  --color-bg: #000; 
   --color-fg: oklch(98.5% 0 0);
   --color-muted: oklch(68.3% 0 0);
   --color-faint: #666;
